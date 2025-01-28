@@ -1,0 +1,12 @@
+.PHONY all clean
+
+all: main dns_resolution
+
+main: main.c
+		gcc -Wall -Wextra -Werror -o main main.c
+
+dns: dns_resolution.c
+		gcc -Wall -Wextra -Werror -o dns dns_resolution.c
+
+clean:
+	rm dns main
