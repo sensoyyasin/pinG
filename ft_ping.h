@@ -1,6 +1,8 @@
 #ifndef FT_PING_H
 #define FT_PING_H
 
+#include <stdlib.h>
+#include <string.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
