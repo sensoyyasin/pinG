@@ -27,6 +27,12 @@ void remove_protocol(char *url) {
         char *protocol_pos = strstr(url, "://");
         if (protocol_pos != NULL)
                 memmove(url, protocol_pos + 3, strlen(protocol_pos + 3) + 1);
+    printf("            _        ____\n");
+    printf("      _ __ (_)_ __  / ___|\n");
+    printf("     | '_ \\| | '_ \\| |  _\n");
+    printf("     | |_) | | | | | |_| |\n");
+    printf("     | .__/|_|_| |_|\\____|\n");
+    printf("     |_|                  \n");
 }
 
 // DNS resolution function

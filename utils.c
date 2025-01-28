@@ -1,33 +1,42 @@
 #include "ft_ping.h"
 
-unsigned short checksum(void *b, int len)
+void    *ft_memset(void *b, int c, size_t len)
 {
-    unsigned short *buf = b;
-    unsigned int sum = 0;
-    unsigned short result;
+        size_t  i = 0;
+        char    *str = (char *)b;
 
-    for (sum = 0; len > 1; len -= 2) {
-        sum += *buf++;
-    }
-    if (len == 1) {
-        sum += *(unsigned char *)buf;
-    }
-
-    sum = (sum >> 16) + (sum & 0xFFFF);
-    sum += (sum >> 16);
-    result = ~sum;
-    return result;
+        while (len > i)
+                str[i++] = c;
+        return (b);
 }
 
-void create_packet(struct icmp *icmp_packet)
+void    *ft_memcpy(void *dest, const void *src, size_t n)
 {
-    ft_memset(icmp_packet, 0, sizeof(struct icmp));
+    size_t i = 0;
+    char *str1 = (char *)src;
+    char *str2 = (char *)dest;
 
-    icmp_packet->icmp_type = ICMP_ECHO;
-    icmp_packet->icmp_code = 0;
-    icmp_packet->icmp_id = getpid();
-    icmp_packet->icmp_seq = 1;
-    icmp_packet->icmp_cksum = 0;
+    if (!str1 && !str2)
+        return NULL;
+    while (n > i)
+    {
+        str2[i] = str1[i];
+        i++;
+    }
+    return str2;
+}
 
-    icmp_packet->icmp_cksum = checksum((unsigned short *)icmp_packet, sizeof(struct icmp));
+void handle_eof()
+{
+    printf("\n" RED "Control D (EOF) received! Input terminating...\n" RESET);
+    exit(1);
+}
+
+void	handle_siginit(int signum)
+{
+	if (signum == SIGINT)
+	{
+        printf("\n" YELLOW "Control C (EOF) received! Input terminating...\n" RESET);
+        exit(0);
+	}
 }

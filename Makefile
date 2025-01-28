@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -Werror
 GREEN = \033[1;32m
 RESET = \033[0m
 
-SRCS = ft_ping.c ft_memcpy.c ft_memset.c utils.c
+SRCS = ft_ping.c dns_resolution.c utils.c ft_checksum.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -19,7 +19,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)
