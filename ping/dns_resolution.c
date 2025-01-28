@@ -6,10 +6,11 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <string.h>
+#include "ft_ping.h"
 
 /*
 struct addrinfo {
-        int              ai_flags; 
+        int              ai_flags;
         int              ai_family; - AFINET IPv4
         int              ai_socktype; - SOCK_STREAM , SOCK_RAW
         int              ai_protocol;
@@ -20,18 +21,26 @@ struct addrinfo {
     };
 */
 
+void print_dns_error(int error_code);
+
+void remove_protocol(char *url) {
+        char *protocol_pos = strstr(url, "://");
+        if (protocol_pos != NULL)
+                memmove(url, protocol_pos + 3, strlen(protocol_pos + 3) + 1);
+}
+
 // DNS resolution function
 int resolve_dns(const char *hostname, struct addrinfo **result) {
     struct addrinfo hints;
 
-    ft_memset(&hints, 0, sizeof(hints));
-    hints.ai_socktype = SOCK_RAW;
-    hints.ai_protocol = 0;          /* Any protocol */
-    hints.ai_canonname = NULL;
-    hints.ai_addr = NULL;
-    hints.ai_next = NULL;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_protocol = IPPROTO_ICMP;
+    //hints.ai_canonname = NULL;
+    //hints.ai_addr = NULL;
+    //hints.ai_next = NULL;
 
-    return (getaddrinfo(hostname, "80", &hints, result));
+    return (getaddrinfo(hostname, NULL, &hints, result));
 }
 
 // Print the resolved IP addresses
@@ -44,7 +53,6 @@ void print_resolved_ips(struct addrinfo *ai_result) {
 
         if (ni_ret != 0) {
             print_dns_error(ni_ret);
-            freeaddrinfo(ni_ret);
             continue;
         }
 
@@ -54,7 +62,7 @@ void print_resolved_ips(struct addrinfo *ai_result) {
 
 void    print_dns_error(int error_code) {
     switch(error_code) {
-        case EAI_ADDRFAMILY:
+        case EAI_FAMILY:
             fprintf(stderr, "Error: The specified network host does not have any network addresses...\n");
             break;
         case EAI_AGAIN:
@@ -66,17 +74,11 @@ void    print_dns_error(int error_code) {
         case EAI_FAIL:
             fprintf(stderr, "Error: Permanent failure in name resolution.\n");
             break;
-        case EAI_FAMILY:
-            fprintf(stderr, "Error: The requested address family is not supported.\n");
-            break;
         case EAI_MEMORY:
             fprintf(stderr, "Error: Out of memory.\n");
             break;
-        case EAI_NODATA:
-            fprintf(stderr, "Error: The specified network host exists, but does not have any network addresses defined.\n");
-            break;
         case EAI_NONAME:
-            fprintf(stderr, "Error: The node or service is not known.\n");
+            fprintf(stderr, "Error: The specified network host exists, but does not have any network addresses defined.\n");
             break;
         case EAI_SERVICE:
             fprintf(stderr, "Error: The requested service is not available for the requested socket type.\n");
