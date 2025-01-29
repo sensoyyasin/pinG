@@ -26,20 +26,21 @@ void print_dns_error(int error_code);
 void remove_protocol(char *url) {
         char *protocol_pos = strstr(url, "://");
         if (protocol_pos != NULL)
-                memmove(url, protocol_pos + 3, strlen(protocol_pos + 3) + 1);
-    printf("            _        ____\n");
-    printf("      _ __ (_)_ __  / ___|\n");
-    printf("     | '_ \\| | '_ \\| |  _\n");
-    printf("     | |_) | | | | | |_| |\n");
-    printf("     | .__/|_|_| |_|\\____|\n");
-    printf("     |_|                  \n");
+                memmove(url, protocol_pos + 3, ft_strlen(protocol_pos + 3) + 1);
+
+        printf("            _        ____\n");
+        printf("      _ __ (_)_ __  / ___|\n");
+        printf("     | '_ \\| | '_ \\| |  _\n");
+        printf("     | |_) | | | | | |_| |\n");
+        printf("     | .__/|_|_| |_|\\____|\n");
+        printf("     |_|                  \n");
 }
 
 // DNS resolution function
 int resolve_dns(const char *hostname, struct addrinfo **result) {
     struct addrinfo hints;
 
-    memset(&hints, 0, sizeof(hints));
+    ft_memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_protocol = IPPROTO_ICMP;
     //hints.ai_canonname = NULL;
@@ -49,22 +50,25 @@ int resolve_dns(const char *hostname, struct addrinfo **result) {
     return (getaddrinfo(hostname, NULL, &hints, result));
 }
 
-// Print the resolved IP addresses
-void print_resolved_ips(struct addrinfo *ai_result) {
+void print_resolved_ips(struct addrinfo *ai_result, char *dest_ip) {
     char addr_str[NI_MAXHOST];
-    struct addrinfo *ai_tmp;
+    struct addrinfo *last_addr = ai_result;
 
-    for (ai_tmp = ai_result; ai_tmp != NULL; ai_tmp = ai_tmp->ai_next) {
-        int ni_ret = getnameinfo(ai_tmp->ai_addr, ai_tmp->ai_addrlen, addr_str, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+    // IP adreslerini topla
+    while (last_addr != NULL) {
+        int ni_ret = getnameinfo(last_addr->ai_addr, last_addr->ai_addrlen, addr_str, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
 
-        if (ni_ret != 0) {
+        if (ni_ret != 0)
             print_dns_error(ni_ret);
-            continue;
+        else {
+            printf("Resolved IP address: %s\n", addr_str);
+            strncpy(dest_ip, addr_str, NI_MAXHOST);
         }
 
-        printf("Resolved IP address: %s\n", addr_str);
+        last_addr = last_addr->ai_next;
     }
 }
+
 
 void    print_dns_error(int error_code) {
     switch(error_code) {

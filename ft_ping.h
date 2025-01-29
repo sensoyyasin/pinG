@@ -1,47 +1,80 @@
-#ifndef FT_PING_H
-#define FT_PING_H
+#include "ft_ping.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netdb.h>
-#include <sys/time.h>
-#include <signal.h>
+void    *ft_memset(void *b, int c, size_t len)
+{
+        size_t  i = 0;
+        char    *str = (char *)b;
 
-#define PING_PACKET_SIZE 64
-#define TIMEOUT_SECONDS 2
+        while (len > i)
+                str[i++] = c;
+        return (b);
+}
 
-// Color definitions
-# define DEFAULT "\033[0;39m"
-# define GRAY "\033[0;90m"
-# define RED "\033[0;91m"
-# define GREEN "\033[0;92m"
-# define YELLOW "\033[0;93m"
-# define BLUE "\033[0;94m"
-# define MAGENTA "\033[0;95m"
-# define CYAN "\033[0;96m"
-# define WHITE "\033[0;97m"
-# define RESET  "\033[0m"
+void    *ft_memcpy(void *dest, const void *src, size_t n)
+{
+    size_t i = 0;
+    char *str1 = (char *)src;
+    char *str2 = (char *)dest;
 
-// Function prototypes
-void	*ft_memset(void *b, int c, size_t len);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-unsigned short checksum(void *b, int len);
-void	create_packet(struct icmp *icmp_packet);
-void	print_resolved_ips(struct addrinfo *ai_result);
-int		resolve_dns(const char *hostname, struct addrinfo **result);
-void	print_dns_error(int error_code);
-void	remove_protocol(char *url);
-void	handle_siginit(int signum);
-void	handle_eof();
+    if (!str1 && !str2)
+        return NULL;
+    while (n > i)
+    {
+        str2[i] = str1[i];
+        i++;
+    }
+    return str2;
+}
 
+int     ft_strlen (char *str)
+{
+        int i = 0;
 
-#endif
+        while (str[i])
+                i++;
+
+        return (i);
+}
+
+void handle_eof()
+{
+    printf("\n" RED "Control D (EOF) received!" RESET);
+    exit(1);
+}
+
+double  get_time_in_ms()
+{
+        struct timeval time_val;
+        gettimeofday(&time_val, NULL);
+
+        return (time_val.tv_sec * 1000.0) + (time_val.tv_usec / 1000.0);
+}
+
+void    handle_siginit(int signum)
+{
+        if (signum == SIGINT)
+        {
+                printf("\n" YELLOW "Control C (EOF) received!" RESET);
+                print_statistics();
+                exit(0);
+        }
+}
+
+void    print_statistics()
+{
+        if (packets_sent == 0) {
+                printf("No packets were sent.\n");
+                return;
+        }
+
+        int packet_loss = packets_sent - packets_received;
+        double loss_percentage = (packets_sent > 0) ? (packet_loss * 100.0) / packets_sent : 0.0;
+
+        // RTT average
+        double avg_rtt = (packets_received > 0) ? (total_time / packets_received) : 0.0;
+
+        printf("\n--- Ping statistics ---\n");
+        printf("%d packets transmitted, %d received, %.0f%% packet loss, time %.0fms\n",
+            packets_sent, packets_received, loss_percentage, total_time);
+        printf("rtt min/avg/max = %.3f/%.3f/%.3f ms\n", min_time, avg_rtt, max_time);
+}
