@@ -10,6 +10,15 @@ void    *ft_memset(void *b, int c, size_t len)
         return (b);
 }
 
+int ft_strlen(char *str)
+{
+    int i = 0;
+
+    while (str[i])
+        i++;
+    return (i);
+}
+
 void    *ft_memcpy(void *dest, const void *src, size_t n)
 {
     size_t i = 0;

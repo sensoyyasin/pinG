@@ -1,11 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <string.h>
 #include "ft_ping.h"
 
 /*
