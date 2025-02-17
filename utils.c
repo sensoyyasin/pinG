@@ -41,11 +41,20 @@ void handle_eof()
     exit(1);
 }
 
-void	handle_siginit(int signum)
+void handle_siginit(int signum)
 {
-	if (signum == SIGINT)
-	{
-        printf("\n" YELLOW "Control C (EOF) received! Input terminating...\n" RESET);
+    extern char *ping_target;
+
+    if (signum == SIGINT)
+    {
+        if (packets_sent == 0) {
+            printf("\nNo packets were transmitted.\n");
+        } else {
+            printf("\n" YELLOW "Control C (EOF) received! Input terminating...\n" RESET);
+            printf("\n--- %s ping statistics ---\n", ping_target);
+            printf("%d packets transmitted, %d packets received, %.1f%% packet loss\n", packets_sent, packets_received,
+                   (float)(packets_sent - packets_received) / packets_sent * 100);
+        }
         exit(0);
-	}
+    }
 }

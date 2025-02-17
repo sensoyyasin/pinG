@@ -13,7 +13,7 @@ unsigned short checksum(void *b, int len) {
     }
 
     if (len == 1) {
-        sum += *(unsigned char *)buf;
+        sum += *(uint8_t *)buf;
     }
 
     sum = (sum >> 16) + (sum & 0xFFFF);

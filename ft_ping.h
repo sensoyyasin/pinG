@@ -16,6 +16,7 @@
 #include <string.h>
 
 #define PING_PACKET_SIZE 64
+#define PING_HEADER_LEN 8
 #define TIMEOUT_SECONDS 2
 
 // Color definitions
@@ -30,6 +31,9 @@
 # define WHITE "\033[0;97m"
 # define RESET  "\033[0m"
 
+int packets_sent;
+int packets_received;
+
 // Function prototypes
 void	*ft_memset(void *b, int c, size_t len);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
@@ -42,6 +46,8 @@ void	print_dns_error(int error_code);
 void	remove_protocol(char *url);
 void	handle_siginit(int signum);
 void	handle_eof();
+void	send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number);
+int		receive_ping(int sockfd, struct sockaddr_in *recv_addr, struct timeval *send_time);
 
 
 #endif
