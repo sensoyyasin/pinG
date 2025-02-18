@@ -1,5 +1,16 @@
 #include "ft_ping.h"
 
+/*
+struct icmp {
+    u_char  icmp_type;    // Type (e.g., 8 for Echo Request, 0 for Echo Reply)
+    u_char  icmp_code;    // Code (usually 0)
+    u_short icmp_cksum;   // Checksum
+    u_short icmp_id;      // Identifier
+    u_short icmp_seq;     // Sequence Number
+    u_char  icmp_data[64]; // Data (optional, often timestamp)
+};
+*/
+
 void send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number)
 {
     struct icmp icmp_packet;
