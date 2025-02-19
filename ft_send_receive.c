@@ -1,16 +1,5 @@
 #include "ft_ping.h"
 
-/*
-struct icmp {
-    u_char  icmp_type;    // Type (e.g., 8 for Echo Request, 0 for Echo Reply)
-    u_char  icmp_code;    // Code (usually 0)
-    u_short icmp_cksum;   // Checksum
-    u_short icmp_id;      // Identifier
-    u_short icmp_seq;     // Sequence Number
-    u_char  icmp_data[64]; // Data (optional, often timestamp)
-};
-*/
-
 void send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number)
 {
     struct icmp icmp_packet;
@@ -54,6 +43,17 @@ int receive_ping(int sockfd, struct sockaddr_in *recv_addr, struct timeval *send
     if (icmp_reply->icmp_type == ICMP_ECHOREPLY) {
         memcpy(send_time, icmp_reply->icmp_data, sizeof(struct timeval));
         return (ip_header->ip_ttl);
+    }
+        /*
+        #define ICMP_ERRORTYPE(type) \
+        ((type) == ICMP_UNREACH || (type) == ICMP_SOURCEQUENCH || \
+        (type) == ICMP_REDIRECT || (type) == ICMP_TIMXCEED || \
+        (type) == ICMP_PARAMPROB)
+        */
+    if (icmp_reply->icmp_type == (ICMP_ERRORTYPE(ICMP_UNREACH) ||
+        ICMP_ERRORTYPE(ICMP_TIMXCEED) || ICMP_ERRORTYPE(ICMP_PARAMPROB))) {
+        printf("Error: Host unreachable\n");
+        exit(1);
     }
 
     return -1;

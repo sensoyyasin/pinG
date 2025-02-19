@@ -3,14 +3,21 @@
 char *ping_target;
 
 int main(int argc, char **argv) {
+
     if (argc != 2)
     {
-        fprintf(stderr, "Usage: %s target_name\n", argv[0]);
+        printf("Usage: ft_ping [Options] <destination address>\n");
+        printf("Options:\n");
+        printf(RED "  -v      Enable verbose output\n" RESET);
+        printf(GRAY "  -?      Show this help message\n" RESET);
         exit(1);
     }
 
+    arg_check(argv[1]);
     remove_protocol(argv[1]);
+
     ping_target = argv[1];
+
     signal(SIGINT, handle_siginit);
 
     packets_sent = 0;
@@ -52,9 +59,8 @@ int main(int argc, char **argv) {
     freeaddrinfo(result);
 
     int sequence_number = 1;
-    int ping_count = 0;
 
-    while (ping_count < 4)
+    while (1)
     {
         struct timeval send_time;
         send_ping(sockfd, &dest_addr, sequence_number);
@@ -83,7 +89,6 @@ int main(int argc, char **argv) {
         }
         sleep(1);
         sequence_number++;
-        ping_count++;
     }
     close(sockfd);
     return 0;

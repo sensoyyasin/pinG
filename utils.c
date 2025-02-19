@@ -58,3 +58,28 @@ void handle_siginit(int signum)
         exit(0);
     }
 }
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	unsigned char	*k1;
+	unsigned char	*k2;
+	size_t			i;
+
+	k1 = (unsigned char *)s1;
+	k2 = (unsigned char *)s2;
+	i = 0;
+	while (k1[i] && k2[i] && k1[i] == k2[i])
+		i++;
+	return (k1[i] - k2[i]);
+}
+
+int ft_isalnum(int c)
+{
+	if ((c >= 'a' && c <= 'z')
+		|| (c >= 'A' && c <= 'Z'))
+		return (1);
+	else if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
+}

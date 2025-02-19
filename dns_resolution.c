@@ -13,9 +13,26 @@ struct addrinfo {
     };
 */
 
+void arg_check(char *argv) {
+    int len = strlen(argv);
+
+    if (len < 5 || (ft_strcmp(argv + len - 4, ".com") != 0 && ft_strcmp(argv + len - 4, ".org") != 0 && ft_strcmp(argv + len - 4, ".net") != 0)) {
+        printf("Error: Invalid domain format! Only '.com', '.org', '.net' domains are allowed.\n");
+        exit(1);
+    }
+
+    // Should contain only letters, numbers, and dots
+    for (int i = 0; i < len - 4; i++) {
+        if (!ft_isalnum(argv[i]) && argv[i] != '.') {
+            printf("Error: Domain can only contain letters, numbers, and '.'\n");
+            exit(1);
+        }
+    }
+}
+
 void remove_protocol(char *url)
 {
-    //http:// from URLs)
+    // http:// from URLs
     char *protocol_pos = strstr(url, "://");
     if (protocol_pos != NULL)
         memmove(url, protocol_pos + 3, ft_strlen(protocol_pos + 3) + 1);

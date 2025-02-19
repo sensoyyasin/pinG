@@ -48,6 +48,9 @@ void	handle_siginit(int signum);
 void	handle_eof();
 void	send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number);
 int		receive_ping(int sockfd, struct sockaddr_in *recv_addr, struct timeval *send_time);
+void	arg_check(char *argv);
+int		ft_strcmp(char *s1, char *s2);
+int		ft_isalnum(int c);
 
 
 #endif
