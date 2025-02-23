@@ -9,6 +9,7 @@ Raw Socket & Ping Command
 ---
 
 1 . What is a Socket and Why is it Used?
+
 Sockets are software components that enable data transmission over a network between two systems. They allow data exchange between a client and a server using communication protocols. Today, most internet applications (such as web browsers, messaging services, and games) operate through sockets.
 Normally, a server runs on a specific computer and has a socket that is bound to a specific port number. The server just waits, listening to the socket for a client to make a connection request.
 On the client-side: The client knows the hostname of the machine on which the server is running and the port number on which the server is listening. To make a connection request, the client tries to rendezvous with the server on the server's machine and port. The client also needs to identify itself to the server so it binds to a local port number that it will use during this connection. This is usually assigned by the system.
@@ -23,12 +24,14 @@ Communication between different devices on a network
 ---
 
 2. What is a Raw Socket?
+3. 
 A Raw Socket allows direct interaction with IP packets, bypassing transport layer protocols like TCP and UDP. This is advantageous for operations requiring detailed control at the network level. For example, ICMP (Internet Control Message Protocol) packets are not dependent on transport layer protocols like TCP or UDP and can only be sent and received using Raw Sockets.
 This way works the well-known ping command, by sending an ICMP echo request message:
 
 ---
 
 3. Creating a Raw Socket
+4. 
 Unlike TCP and UDP, Raw Sockets work directly with IP packets.
 
 Graphical demonstration of a raw socketComparison: Raw Socket vs. Other Sockets
@@ -49,9 +52,11 @@ The most common Types of Sockets:
 ---
 
 4 . ICMP (Internet Control Message Protocol) Packet
+
 ICMP is an Internet Control Message Protocol that operates at the network layer. It is typically used in network devices like routers for error management. Since the network layer encounters various error types, ICMP is used for reporting and troubleshooting.
 
 ICMP and the OSI Model:
+
 ICMP is used for error reporting and management queries.
 It is a supporting protocol that network devices (e.g., routers) use to send error messages and operational information.
 For example, it is used when a requested service is unavailable or a host/router is unreachable.
@@ -63,6 +68,7 @@ Since ICMP operates directly over IP, it does not require a transport layer prot
 ---
 
 5 . ICMP Packet Structure
+
 An ICMP Echo Request or Echo Reply packet consists of the following components:
 Type: 8 (Echo Request), 0 (Echo Reply)
 Code: Specifies various error conditions.
@@ -82,6 +88,7 @@ struct icmphdr {
 ---
 
 6 . ICMP Use Cases
+
 ICMP is used for error reporting between two devices connected via the internet. A router sends an error message to the source, reporting the issue. For instance, if a sender transmits a message that is too large, the receiver may drop the message and respond to the sender with an ICMP message.
 ICMP is also crucial for network diagnostics, typically using tools like Traceroute and Ping:
 Traceroute: Determines the path between two devices. Used to identify network issues before data transmission.
@@ -90,6 +97,7 @@ Ping: A simpler version of Traceroute that measures round-trip time by sending a
 ---
 
 How the Ping Command Works
+
 Sending an ICMP Echo Request: When the ping command is executed, an ICMP Echo Request packet is sent to the target IP address.
 Receiving an Echo Reply: The target device receives this request and sends back an ICMP Echo Reply packet.
 Measuring Response Time: The source device calculates the round-trip time and displays the result.
@@ -98,6 +106,7 @@ Identifying Packet Loss: If some ICMP packets do not receive a response, they ar
 ---
 
 Ping Usage Purposes
+
 Testing network connectivity: Checks whether a specific device is reachable.
 Measuring network latency: Evaluates network performance by calculating round-trip time.
 Detecting packet loss: Identifies potential network issues.
@@ -106,6 +115,7 @@ Testing DNS resolution: By using a domain name instead of an IP address, the DNS
 ---
 
 How Does ICMP Work?
+
 ICMP (Internet Control Message Protocol) is a fundamental and essential protocol within the IP protocol suite. However, it is not associated with any transport layer protocol (such as TCP or UDP) because it can send messages without establishing a connection. In other words, ICMP is a connectionless protocol.
 The way ICMP works is different from TCP. While TCP is a connection-oriented protocol, requiring both devices to establish a connection before sending messages, ICMP does not require such a connection.
 ICMP packets are transmitted in the form of datagrams, which contain an IP header and ICMP data. An ICMP datagram is similar to a packet, as it is an independent unit of data.
@@ -113,6 +123,7 @@ ICMP packets are transmitted in the form of datagrams, which contain an IP heade
 ---
 
 7 . ICMP Packet Structure Analysis
+
 An ICMP Echo Request or Echo Reply packet is structured as follows:
 ICMP Header (8 Bytes):
 Contains information such as packet type (Echo Request or Echo Reply), code, and checksum (error control).
@@ -125,6 +136,7 @@ This data is sent by the ICMP protocol and transmitted to the target device.
 ---
 
 8 . Sending an ICMP Packet (sendto)
+
 To send ICMP packets, we use the sendto function. This function sends an ICMP Echo Request (ping) packet to a specific destination.
 void send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number)
 {
@@ -141,6 +153,7 @@ void send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number)
         exit(EXIT_FAILURE);
     }
 }
+
 The send_ping function is responsible for sending ICMP Echo Request packets (ping).
 Creating the ICMP Packet: The fill_icmp_echo_packet function is called to construct the ICMP Echo Request (ping) packet. This packet is populated using the provided sequence_number and packet_len.
 Sending the Packet: The sendto function is used to send the ICMP packet over the specified socket (sockfd) to the destination address (dest_addr). The size of the packet is also passed.
@@ -155,6 +168,7 @@ sequence_number: A unique identifier for the sent ping packet.
 ---
 
 9 . Receiving an ICMP Packet (recvfrom)
+
 The recvfrom function is used to receive an ICMP Echo Reply (ping response) packet.
 int receive_ping(int sockfd, struct sockaddr_in *recv_addr, struct timeval *send_time)
 {
@@ -218,6 +232,7 @@ int fill_icmp_echo_packet(uint8_t *buf, int packet_len, int sequence_number)
 
     return 0;
 }
+
 hdr is a pointer to an icmphdr structure, which represents the ICMP header. The buffer buf is cast to this structure type so that the program can modify the header's fields.
 timestamp is a pointer to a struct timeval that will store the timestamp (the time the packet is sent). It's placed immediately after the ICMP header in the buf array. sizeof(struct icmphdr) gives the size of the ICMP header, so adding that value to buf positions timestamp right after the header.
 The gettimeofday function is used to get the current time and store it in the timestamp. This records the time at which the ping request is sent. If gettimeofday fails, the function returns -1.
@@ -248,6 +263,7 @@ Returns -1 if there is an error in getting the current time (e.g., if gettimeofd
 ---
 
 10 . Adjusting Packet Size
+
 The ICMP packet size can be modified using the -s (size) parameter in the ping command:
 ping -s 128 <destination_ip>
 This command sets the ICMP Echo Request data section to 128 bytes.
@@ -256,6 +272,7 @@ Larger packets increase network load, affecting latency and error rates.
 ---
 
 11 . Adjusting Packet Count & Duration
+
 To send a specific number of packets:
 ping -c 10 <destination_ip>
 This sends 10 ICMP Echo Requests to yahoo.com.
@@ -276,6 +293,7 @@ This mechanism helps diagnose network issues and measure connectivity performanc
 ---
 
 12 . TTL (Time to Live) Value
+
 TTL is a value that specifies the maximum number of routers an IP packet can pass through during its journey. In other words, TTL is decreased by one by each router as the packet travels through the network, and when TTL reaches zero, the packet is discarded from the network.
 When using the Ping command, the TTL value can be an indicator of the length of the network path. If a packet returns from a very distant server, the TTL value will be lower because it has passed through more routers.
 This value is used to prevent a packet from circulating endlessly in the network if it accidentally enters an infinite loop. Each router decreases the TTL value by one, and if the TTL reaches zero, the packet is discarded.
@@ -283,6 +301,7 @@ This value is used to prevent a packet from circulating endlessly in the network
 ---
 
 13 . ICMP Checksum Packet Analysis
+
 Example ICMP Echo Request Packet (in HEX format)
 08 00 00 00 12 34 00 01  61 62 63 64 65 66 67 68
 Let's break down the sections of this packet:
@@ -325,6 +344,7 @@ Rearranged ICMP packet:
 ---
 
 14 . Verification Process on the Receiver Side
+
 When the receiver gets the packet, it sees the checksum field as 0xA2C7.
 All fields in the packet are summed again (including the checksum field).
 If the result is 0xFFFF, the packet is valid; otherwise, there is an error.
@@ -345,6 +365,7 @@ Perform verification on the receiver side.
 ---
 
 15 . Start Packet Capture Using Wireshark
+
 The Wireshark screen will be appeared.
 Double-click the interface name you want to monitor, and you can see the packets sent to the interface.
 After compiling the ft_ping.c code with make, you can ping and check network connectivity using ./ft_ping <destination_addr>.
@@ -356,11 +377,13 @@ Sent!
 ---
 
 16 . Check Frames with Wireshark
+
 Wireshark icmp packets analyze
 
 ---
 
 SOURCES
+
 Cisco Learning Network
 Edit descriptionlearningnetwork.cisco.com
 https://www.baeldung.com/cs/raw-sockets
