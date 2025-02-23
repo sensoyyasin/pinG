@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
     char dest_ip[NI_MAXHOST];
     print_resolved_ips(result, dest_ip);
-    printf("PING %s (%d) data bytes\n", argv[1], (PING_PACKET_SIZE - PING_HEADER_LEN));
+    printf("PING %s (%d) data bytes\n", argv[1], (PING_PACKET_SIZE));
 
     // Create raw socket for ICMP
     int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
             long sec_diff = recv_time.tv_sec - send_time.tv_sec;
             long usec_diff = recv_time.tv_usec - send_time.tv_usec;
 
-            float rtt = ((sec_diff * 1000.0) + (usec_diff / 1000.0) * 1000);
+            float rtt = (sec_diff * 1000.0) + (usec_diff / 1000.0);
 
             printf("64 bytes from %s (%s): icmp_seq=%d ttl=%d time=%.3f ms\n",
                 inet_ntoa(recv_addr.sin_addr),

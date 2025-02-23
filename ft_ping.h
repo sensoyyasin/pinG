@@ -17,6 +17,7 @@
 
 #define PING_PACKET_SIZE 64
 #define PING_HEADER_LEN 8
+#define ICMP_BODY_SIZE 56
 #define TIMEOUT_SECONDS 2
 
 // Color definitions
@@ -30,6 +31,22 @@
 # define CYAN "\033[0;96m"
 # define WHITE "\033[0;97m"
 # define RESET  "\033[0m"
+
+struct icmphdr {
+    uint8_t type;
+    uint8_t code;
+    uint16_t checksum;
+    union {
+        struct {
+            uint16_t id;
+            uint16_t sequence;
+        } echo;
+        uint32_t gateway;
+        struct {
+            uint16_t mtu;
+        } frag;
+    } un;
+};
 
 int packets_sent;
 int packets_received;
@@ -48,9 +65,9 @@ void	handle_siginit(int signum);
 void	handle_eof();
 void	send_ping(int sockfd, struct sockaddr_in *dest_addr, int sequence_number);
 int		receive_ping(int sockfd, struct sockaddr_in *recv_addr, struct timeval *send_time);
+int		fill_icmp_echo_packet(uint8_t *buf, int packet_len, int sequence_number);
 void	arg_check(char *argv);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isalnum(int c);
-
 
 #endif
