@@ -24,14 +24,14 @@ Communication between different devices on a network
 ---
 
 2. What is a Raw Socket?
-3. 
+
 A Raw Socket allows direct interaction with IP packets, bypassing transport layer protocols like TCP and UDP. This is advantageous for operations requiring detailed control at the network level. For example, ICMP (Internet Control Message Protocol) packets are not dependent on transport layer protocols like TCP or UDP and can only be sent and received using Raw Sockets.
 This way works the well-known ping command, by sending an ICMP echo request message:
 
 ---
 
 3. Creating a Raw Socket
-4. 
+   
 Unlike TCP and UDP, Raw Sockets work directly with IP packets.
 
 Graphical demonstration of a raw socketComparison: Raw Socket vs. Other Sockets
