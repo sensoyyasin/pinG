@@ -303,16 +303,27 @@ This value is used to prevent a packet from circulating endlessly in the network
 13 . ICMP Checksum Packet Analysis
 
 Example ICMP Echo Request Packet (in HEX format)
+
 08 00 00 00 12 34 00 01  61 62 63 64 65 66 67 68
+
 Let's break down the sections of this packet:
+
 Step 1: Divide into 16-bit blocks
+
 Let's split the packet into 16-bit blocks:
+
 0800 0000 1234 0001 6162 6364 6566 6768
+
 Blocks:
+
 Step 2: Sum the blocks
+
 Let's sum all the blocks in hexadecimal:
+
 0800 + 0000 + 1234 + 0001 + 6162 + 6364 + 6566 + 6768
+
 Calculations:
+
 0x0800  = 2048
 0x0000  = 0
 0x1234  = 4660
@@ -322,23 +333,33 @@ Calculations:
 0x6566  = 25958
 0x6768  = 26472
 --------------------
+
 Total: 89373 (0x15D37)
+
 Step 3: Add carry bit
+
 The result is 0x15D37, which exceeds a 16-bit value, so the carry bit (0x1) is added to the lower part:
+
 0x5D37 + 0x0001 = 0x5D38
 
 ---
 
 Step 4: Take the one's complement
+
 To obtain the checksum value, we flip 0x5D38:
+
 0xFFFF - 0x5D38 = 0xA2C7
+
 In this case, the checksum value is: A2C7
 
 ---
 
 Step 5: Insert the checksum into the packet
+
 Now, let's insert the checksum value into the packet:
+
 08 00 A2 C7 12 34 00 01  61 62 63 64 65 66 67 68
+
 Rearranged ICMP packet:
 
 ---
