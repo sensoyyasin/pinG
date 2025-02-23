@@ -410,3 +410,5 @@ Cisco Learning Network
 Edit descriptionlearningnetwork.cisco.com
 
 https://www.baeldung.com/cs/raw-sockets
+
+https://medium.com/@sensoyyasin72/raw-socket-ping-command-4e18d798dffa
