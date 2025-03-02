@@ -32,10 +32,10 @@ void arg_check(char *argv) {
 
 void remove_protocol(char *url)
 {
-    // http:// from URLs
-    char *protocol_pos = strstr(url, "://");
-    if (protocol_pos != NULL)
-        memmove(url, protocol_pos + 3, ft_strlen(protocol_pos + 3) + 1);
+    // http:// from URLs 
+    //char *protocol_pos = strstr(url, "://"); -> potential memory leaks
+    //if (protocol_pos != NULL)
+        //memmove(url, protocol_pos + 3, ft_strlen(protocol_pos + 3) + 1);
 
         printf("            _        ____\n");
         printf("      _ __ (_)_ __  / ___|\n");
